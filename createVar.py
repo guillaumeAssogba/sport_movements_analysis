@@ -36,33 +36,29 @@ def constructMatrices(numberSheets, kicking_data, performance_data):
 
 #Load for not writing all the time
 def FastRugbyBuild(name1, name2):
-    kicking_data = pd.ExcelFile(name1)
+    sportData = pd.ExcelFile(name1)
     perfData = pd.ExcelFile(name2)
     bodyMatrices = []
-    for i in range(len(kicking_data.sheet_names)):
-        bodyMatrices.append(kicking_data.parse(kicking_data.sheet_names[i]).as_matrix())
-    perf = perfData.parse(kicking_data.sheet_names[0]).as_matrix()
+    for i in range(len(sportData.sheet_names)):
+        print()
+        bodyMatrices.append(sportData.parse(sportData.sheet_names[i]).as_matrix())
+    perf = perfData.parse(perfData.sheet_names[0]).as_matrix()
     return bodyMatrices, perf
 
 #Create adapted variables for future processing and their mean.
-def constructVariables(data1, data2, data3, performance):
+def constructVariables(bodyMatrices, performance):
     #The time is the same for every data and correspond to the first column
-    time = data1[:,0]
-    print(len(data1.T))
+    time = bodyMatrices[1][:,0]
     #Variables sheet 1
-    var1 = data1[:, 1:len(data1.T)]
-    var1_mean = np.mean(var1, axis=1)
-
-    #Variables sheet 2
-    var2 = data2[:, 1:len(data2.T)]
-    var2_mean = np.mean(var2, axis=1)
+    varMatrices = []
+    meanMatrices = []
     
-    #Variables sheet 3
-    var3 = data3[:, 1:len(data3.T)]
-    var3_mean = np.mean(var3, axis=1)
-
+    for i in range(len(bodyMatrices)):
+        varMatrices.append(bodyMatrices[i][:, 1:len(bodyMatrices[i].T)])
+        meanMatrices.append(np.mean(varMatrices[i], axis=1))
+    
     #performances
     distance = performance[:,0]
     position = performance[:,1]
 
-    return time, var1, var1_mean, var2, var2_mean, var3, var3_mean, distance, position
+    return time, varMatrices, meanMatrices, distance, position
