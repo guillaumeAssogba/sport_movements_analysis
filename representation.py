@@ -5,11 +5,10 @@ from scipy import stats
 ### REPRESENTATION Section ###
 
 #Function for representing the scores 
-def PCArepresentation(data, name, mean, time):
+def PCArepresentation(data, name, time):
     plt.plot(time, data[:,0],'b', label='1st component')
     plt.plot(time, data[:,1],'g', label='2nd component')
     plt.plot(time, data[:,2],'r', label='3rd component')
-    #plt.plot(time, mean,'k', label='mean')
     plt.xlabel('time')
     plt.ylabel('Variable ' + name)
     plt.legend()
