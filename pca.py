@@ -7,19 +7,21 @@ from sklearn.utils.extmath import svd_flip
 ### PCA Section ###
 
 #Represention of the variance explained by PCs
-def explainedVariance(explained_variance_ratio_):
+def explainedVariance(explained_variance_ratio_, namePlot):
     plt.bar(np.arange(15) + 0.6, explained_variance_ratio_.cumsum())
     plt.ylim((0, 1))
     plt.xlabel('No. of principal components')
     plt.ylabel('Cumulative variance explained')
     plt.grid(axis = 'y', ls = '-', lw = 1, color = 'white')
+    plt.savefig("plot/loadings"+namePlot, bbox_inches='tight')
     plt.show()
 
 #Representation of the loadings
-def factorLoadings(components_, i):
+def factorLoadings(components_, i, namePlot):
     plt.bar(np.arange(15) + 0.6, components_[i])
     plt.xlabel('No. of the kicker')
     plt.ylabel('Factor loadings for the PC No ' + str(i+1))
+    plt.savefig("plot/loadings"+namePlot, bbox_inches='tight')
     plt.show()
 
 # Get variance explained by singular values
@@ -58,46 +60,50 @@ def PCA_projection(data, components_):
 
 def constructStdDeviationComponents(data, data_components):
     data = check_array(data)
-    stdProjection = []
+    stdProjectionPos = []
+    stdProjectionNeg = []
     for i in range(len(data_components)):
-        stdComponents = np.std(data_components[i])
         intermediatePosVar = []
         intermediateNegVar = []
+        stdComponents = np.std(data_components[i])
         if i == 0:
             intermediatePosVar =  np.vstack((data_components[0]+ stdComponents, data_components[1::]))
             intermediateNegVar =  np.vstack((data_components[0]- stdComponents, data_components[1::]))
-            stdProjection = PCA_projection(data, intermediatePosVar)
-            stdProjection = np.hstack((stdProjection, PCA_projection(data, intermediateNegVar)))
-
+            stdProjectionPos = PCA_projection(data, intermediatePosVar)
+            stdProjectionNeg = PCA_projection(data, intermediateNegVar)
+        elif i == 1:
+            intermediatePosVar =  np.vstack((data_components[0], data_components[i]+ stdComponents, data_components[i+1::]))
+            intermediateNegVar =  np.vstack((data_components[0], data_components[i]- stdComponents, data_components[i+1::]))
+            stdProjectionPos = np.hstack((stdProjectionPos, PCA_projection(data, intermediatePosVar)))
+            stdProjectionNeg = np.hstack((stdProjectionNeg, PCA_projection(data, intermediateNegVar)))
+        elif i == len(data_components)-1:
+            #print(3)
+            intermediatePosVar =  np.vstack((data_components[:i], data_components[i]+ stdComponents))
+            intermediateNegVar =  np.vstack((data_components[:i], data_components[i]- stdComponents))
+            stdProjectionPos = np.hstack((stdProjectionPos, PCA_projection(data, intermediatePosVar)))
+            stdProjectionNeg = np.hstack((stdProjectionNeg, PCA_projection(data, intermediateNegVar)))
         else:
-            if i == 1:
-                intermediatePosVar =  np.vstack((data_components[0], data_components[i]+ stdComponents, data_components[i+1::]))
-                intermediateNegVar =  np.vstack((data_components[0], data_components[i]- stdComponents, data_components[i+1::]))
-            else:
-                intermediatePosVar =  np.vstack((data_components[::i-1], data_components[i]+ stdComponents, data_components[i+1::]))
-                intermediateNegVar =  np.vstack((data_components[::i-1], data_components[i]- stdComponents, data_components[i+1::]))
-            np.hstack((stdProjection, PCA_projection(data, intermediatePosVar)))
-            np.hstack((stdProjection, PCA_projection(data, intermediateNegVar)))
-    print(stdProjection.shape)
-    print(intermediatePosVar.shape)
-    
-    return stdProjection
+            intermediatePosVar =  np.vstack((data_components[:i], data_components[i]+ stdComponents, data_components[i+1::]))
+            intermediateNegVar =  np.vstack((data_components[:i], data_components[i]- stdComponents, data_components[i+1::]))
+            stdProjectionPos = np.hstack((stdProjectionPos, PCA_projection(data, intermediatePosVar)))
+            stdProjectionNeg = np.hstack((stdProjectionNeg, PCA_projection(data, intermediateNegVar)))
+    return stdProjectionPos, stdProjectionNeg
         
-def applyPCA(data):
+def applyPCA(data, stdDeviation):
     data_components_, data_explained_variance_ratio_ = PCA_values(data)
+    stdProjectionsPos = []
+    stdProjectionsNeg = []
     #represent the percentage of variance explained
-    #explainedVariance(data_explained_variance_ratio_)
+    explainedVariance(data_explained_variance_ratio_)
 
     #represent the factor loadings for each PCs
-    #for i in range(3):
-    #    factorLoadings(data_components_, i)
+    for i in range(3):
+        factorLoadings(data_components_, i)
 
     #Project the data into the new PCs axis
     data_projected = PCA_projection(data, data_components_[:3])
-    stdProjections = constructStdDeviationComponents(data, data_components_[:3])
-    return data_projected, data_components_[:3], stdProjections
-
-
-        
     
-    
+    if stdDeviation:
+        stdProjectionsPos, stdProjectionsNeg = constructStdDeviationComponents(data, data_components_[:3])
+    return data_projected, data_components_[:3], stdProjectionsPos, stdProjectionsNeg
+

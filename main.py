@@ -1,10 +1,10 @@
 import sys
 import os
 from PyQt4 import QtGui
-import interfaceTestQt
+import interface
 import launchAlgo
 
-class ExampleApp(QtGui.QMainWindow, interfaceTestQt.Ui_MainWindow):
+class ExampleApp(QtGui.QMainWindow, interface.Ui_MainWindow):
     def __init__(self, parent=None):
         super(ExampleApp, self).__init__(parent)
         self.setupUi(self)

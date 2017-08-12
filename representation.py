@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from scipy import stats
@@ -5,16 +6,17 @@ from scipy import stats
 ### REPRESENTATION Section ###
 
 #Function for representing the scores 
-def PCArepresentation(data, name, time):
+def PCArepresentation(data, name, time, namePlot):
     plt.plot(time, data[:,0],'b', label='1st component')
     plt.plot(time, data[:,1],'g', label='2nd component')
     plt.plot(time, data[:,2],'r', label='3rd component')
     plt.xlabel('time')
     plt.ylabel('Variable ' + name)
     plt.legend()
+    plt.savefig("plot/PCArepresentation"+namePlot, bbox_inches='tight')
     plt.show()
 
-def plot2dRegression(x,y, nameX, nameY):
+def plot2dRegression(x,y, nameX, nameY, namePlot):
     model = LinearRegression()
     linearModel = model.fit(x, y)
     predictModel = linearModel.predict(x)
@@ -24,17 +26,18 @@ def plot2dRegression(x,y, nameX, nameY):
     plt.ylabel(nameY)
     test = stats.linregress(predictModel,y)
     print("The squared of the correlation coefficient R^2 is " + str(test.rvalue**2))
+    plt.savefig("plot/loadings"+namePlot, bbox_inches='tight')
     plt.show()
 
 def use2dRegressionPlot( distance, data_components, name):
     for i in range(3):
-        plot2dRegression(distance.reshape(15,1),data_components[i], "distance", "loadings of " + name + " for PC" + str(i+1))
-    plot2dRegression(data_components[0].reshape(15,1), data_components[1], "PC1 for " + name, "PC2")
-    plot2dRegression(data_components[0].reshape(15,1), data_components[2], "PC1 for " + name, "PC2")
-    plot2dRegression(data_components[1].reshape(15,1), data_components[2], "PC1 for " + name, "PC2")
+        plot2dRegression(distance.reshape(15,1),data_components[i], "distance", "loadings of " + name + " for PC" + str(i+1), "RegressionDistLoading"+ name +"PC"+str(i+1))
+    plot2dRegression(data_components[0].reshape(15,1), data_components[1], "PC1 for " + name, "PC2", "RegressionLoadingsPC1-2")
+    plot2dRegression(data_components[0].reshape(15,1), data_components[2], "PC1 for " + name, "PC3", "RegressionLoadingsPC1-3")
+    plot2dRegression(data_components[1].reshape(15,1), data_components[2], "PC2 for " + name, "PC3", "RegressionLoadingsPC2-3")
 
 #Function for representing the inf and sup arrays on the projected PCs
-def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time):
+def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time, namePlot):
     for i in range(3):
         plt.plot(time, data[:,i],'b', label='all')
         plt.plot(time, data_superior[:,i],'g--', label='sup')
@@ -42,4 +45,16 @@ def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time):
         plt.xlabel('time')
         plt.ylabel('Variable ' + name + " PC" + str(i+1))
         plt.legend()
+        plt.savefig("plot/PCArepresentation/"+namePlot[i], bbox_inches='tight')
         plt.show()    
+
+#Function for representing the inf and sup arrays on the projected PCs
+def stdDeviationsPCARepresentation(data, data_superior, data_inferior, name, time, namePlot):
+    plt.plot(time, data[:,0] + data[:,1] + data[:,2],'b', label='all')
+    plt.plot(time, data_superior[:,0] + data_superior[:,1] + data_superior[:,2],'g--', label='sup')
+    plt.plot(time, data_inferior[:,0] + data_inferior[:,1] + data_inferior[:,2],'r--', label='inf')
+    plt.xlabel('time')
+    plt.ylabel('Variable ' + name)
+    plt.legend()
+    plt.savefig("plot/PCAstdDeviation/"+namePlot, bbox_inches='tight')
+    plt.show() 
