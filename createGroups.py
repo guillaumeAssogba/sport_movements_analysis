@@ -22,7 +22,6 @@ def createGroupsByKmeans(distance):
     kmeans = KMeans(n_clusters=2)
     perf_fit = kmeans.fit_predict(distance.reshape(-1,1))
     perf_data = transformPerfArray(perf_fit, distance)
-    print(perf_data)
     perf_data = perf_data.reshape(1,15)
     print(perf_data)
     return perf_data
@@ -40,9 +39,23 @@ def createGroupsRandomly(distance):
             perf_data[0,i] = -1
     for i in range(int(len(distance)/3)):
         perf_data[0,sorted_distance[0:5][i]] = 0
-    print(perf_data)
     return perf_data
 
+def constructCompts(components_, data, perf_data):
+    for i in range(len(data)):
+        
+        inter_pos, inter_neg, inter_superior, inter_inferior, delete_pos, delete_neg = constructComponents(components_[3*i:3*(i+1)], data[i], perf_data)
+        if i == 0:
+            components_pos = [inter_pos]
+            components_neg = [inter_neg]
+            data_superior = [inter_superior]
+            data_inferior = [inter_inferior]
+        else:
+            components_pos = np.concatenate((components_pos, [inter_pos]))
+            components_neg = np.concatenate((components_neg, [inter_neg]))
+            data_superior = np.concatenate((data_superior, [inter_superior]))
+            data_inferior = np.concatenate((data_inferior, [inter_inferior]))
+    return components_pos, components_neg, data_superior, data_inferior, delete_pos, delete_neg
 #Construction of the superior and inferior arrays and the corresponding components_array
 def constructComponents(components_, data, perf_data):
     
@@ -62,5 +75,4 @@ def constructComponents(components_, data, perf_data):
             components_neg = np.delete(components_neg, i-delete_neg, 1)
             data_inferior = np.delete(data_inferior, i-delete_neg, 1)
             delete_neg += 1
-    print(data_superior)
-    return components_pos, components_neg, data_superior, data_inferior
+    return components_pos, components_neg, data_superior, data_inferior, delete_pos, delete_neg

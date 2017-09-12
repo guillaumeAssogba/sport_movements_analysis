@@ -7,13 +7,14 @@ from scipy import stats
 
 #Function for representing the scores 
 def PCArepresentation(data, name, time, namePlot):
+    print(12)
     plt.plot(time, data[:,0],'b', label='1st component')
     plt.plot(time, data[:,1],'g', label='2nd component')
     plt.plot(time, data[:,2],'r', label='3rd component')
     plt.xlabel('time')
     plt.ylabel('Variable ' + name)
     plt.legend()
-    plt.savefig("plot/PCArepresentation"+namePlot, bbox_inches='tight')
+    plt.savefig("plot/PCArepresentation/"+namePlot, bbox_inches='tight')
     plt.show()
 
 def plot2dRegression(x,y, nameX, nameY, namePlot):
@@ -26,7 +27,7 @@ def plot2dRegression(x,y, nameX, nameY, namePlot):
     plt.ylabel(nameY)
     test = stats.linregress(predictModel,y)
     print("The squared of the correlation coefficient R^2 is " + str(test.rvalue**2))
-    plt.savefig("plot/loadings"+namePlot, bbox_inches='tight')
+    plt.savefig("plot/loadings/"+namePlot, bbox_inches='tight')
     plt.show()
 
 def use2dRegressionPlot( distance, data_components, name):
@@ -50,11 +51,12 @@ def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time, n
 
 #Function for representing the inf and sup arrays on the projected PCs
 def stdDeviationsPCARepresentation(data, data_superior, data_inferior, name, time, namePlot):
-    plt.plot(time, data[:,0] + data[:,1] + data[:,2],'b', label='all')
-    plt.plot(time, data_superior[:,0] + data_superior[:,1] + data_superior[:,2],'g--', label='sup')
-    plt.plot(time, data_inferior[:,0] + data_inferior[:,1] + data_inferior[:,2],'r--', label='inf')
-    plt.xlabel('time')
-    plt.ylabel('Variable ' + name)
-    plt.legend()
-    plt.savefig("plot/PCAstdDeviation/"+namePlot, bbox_inches='tight')
-    plt.show() 
+    for i in range(3):
+        plt.plot(time, data[:,0] + data[:,1] + data[:,2],'b', label='all')
+        plt.plot(time, data_superior[:,3*i] + data_superior[:,3*i+1] + data_superior[:,3*i+2],'g--', label='sup')
+        plt.plot(time, data_inferior[:,3*i] + data_inferior[:,3*i+1] + data_inferior[:,3*i+2],'r--', label='inf')
+        plt.xlabel('time')
+        plt.ylabel('Variable ' + name)
+        plt.legend()
+        plt.savefig("plot/PCAstdDeviation/"+namePlot, bbox_inches='tight')
+        plt.show() 

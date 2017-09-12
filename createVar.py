@@ -39,11 +39,12 @@ def FastRugbyBuild(name1, name2):
     sportData = pd.ExcelFile(name1)
     perfData = pd.ExcelFile(name2)
     bodyMatrices = []
+    varName = []
     for i in range(len(sportData.sheet_names)):
-        print()
         bodyMatrices.append(sportData.parse(sportData.sheet_names[i]).as_matrix())
+        varName.append(sportData.sheet_names[i])
     perf = perfData.parse(perfData.sheet_names[0]).as_matrix()
-    return bodyMatrices, perf
+    return bodyMatrices, perf, varName
 
 #Create adapted variables for future processing and their mean.
 def constructVariables(bodyMatrices, performance):

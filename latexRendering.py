@@ -30,9 +30,9 @@ def fillPca(doc, loadings):
 
 if __name__ == '__main__':
     loadings = []
-    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\RegressionDistLoadingvar1PC1.png'))
-    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\RegressionDistLoadingvar1PC2.png'))
-    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\RegressionDistLoadingvar1PC3.png'))
+    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\Regression1\DistLoadingvar1PC1.png'))
+    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\Regression\DistLoadingvar1PC2.png'))
+    loadings.append(os.path.join(os.path.dirname(__file__), 'plot\Regression\DistLoadingvar1PC3.png'))
     
     # Basic document
     geometry_options = {
