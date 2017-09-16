@@ -143,6 +143,7 @@ class Ui_MainWindow(object):
         self.spinBox.setGeometry(QtCore.QRect(170, 10, 42, 22))
         self.spinBox.setMinimum(1)
         self.spinBox.setMaximum(1000)
+        self.spinBox.setValue(3)
         self.spinBox.setObjectName(_fromUtf8("spinBox"))
         self.tabWidget.addTab(self.PCA, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
@@ -224,4 +225,3 @@ class Ui_MainWindow(object):
         self.checkBox_11.setText(_translate("MainWindow", "algo 3", None))
         self.checkBox_12.setText(_translate("MainWindow", "algo 4", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "other algos", None))
-

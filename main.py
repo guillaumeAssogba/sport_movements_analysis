@@ -63,7 +63,7 @@ class ExampleApp(QtGui.QMainWindow, interface.Ui_MainWindow):
             self.pushButton_3.setEnabled(True)
             
     def launchAnalysis(self):
-        launchAlgo.launchProcess2(self.bodyName, self.perfName, self.groupMethod, self.algorithm)
+        launchAlgo.launchProcess2(self.bodyName, self.perfName, self.groupMethod, self.algorithm, int(self.spinBox.value()))
             
     
           

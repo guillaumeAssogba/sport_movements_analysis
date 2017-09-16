@@ -14,6 +14,8 @@ def transformPerfArray(perf_data, distance):
                 perf_data[i]=1
             else:
                 perf_data[i]=0
+            print(perf_data[i])
+            print(i)
     return perf_data
 
 #Distinguish the good and bad kicker by applying the k-means method on the distance matrix.
@@ -42,9 +44,9 @@ def createGroupsRandomly(distance):
     return perf_data
 
 def constructCompts(components_, data, perf_data):
-    for i in range(len(data)):
-        
-        inter_pos, inter_neg, inter_superior, inter_inferior, delete_pos, delete_neg = constructComponents(components_[3*i:3*(i+1)], data[i], perf_data)
+    nbData = len(data)
+    for i in range(nbData):
+        inter_pos, inter_neg, inter_superior, inter_inferior, delete_pos, delete_neg = constructComponents(components_[nbData*i:nbData*(i+1)], data[i], perf_data)
         if i == 0:
             components_pos = [inter_pos]
             components_neg = [inter_neg]
