@@ -47,4 +47,4 @@ def launchProcess2(name1, name2, groupMethod, algorithm, nb):
         if algorithm[3]:
             pltVar.stdDeviationsPCARepresentation(data_projected[:,nb*k:nb*(k+1)], stdProjectionsPos[:,nb*nb*(k):nb*nb*(k+1)], stdProjectionsNeg[:,nb*nb*(k):nb*nb*(k+1)], str(k+1) , time, "var" + str(k+1)+ "stdDeviationPC", nb)
 #For testing without the interface 
-launchProcess2("../bodyData.xlsx", "../performance.xlsx", True, [True, True, True, True, False, False], 4)
+#launchProcess2("../bodyData.xlsx", "../performance.xlsx", True, [True, True, True, True, False, False], 4)
