@@ -29,15 +29,17 @@ def plot2dRegression(x,y, nameX, nameY, namePlot):
     plt.show()
     return test.rvalue**2
 
-def use2dRegressionPlot( distance, data_components, name, nb):
+def use2dRegressionPlot( performance, data_components, name, nbPerf):
     correlationCoeff = []
-    for i in range(nb):
-        correl = plot2dRegression(distance.reshape(15,1),data_components[i], "distance", "loadings of " + name + " for PC" + str(i+1), "RegressionDistLoading"+ name +"PC"+str(i+1))
-        correlationCoeff.append(correl)
-        
-        for j in range(i+1, nb):
-            correl = plot2dRegression(data_components[i].reshape(15,1), data_components[j], "PC" + str(i+1) + " for " + name, "PC"+ str(j+1), "RegressionLoadingsPC"+ str(i+1) +"-" + str(j+1))
-            correlationCoeff.append(correl)
+    
+    for i in range(nbPerf):
+        for k in range(performance.shape[1]):
+             correl = plot2dRegression(performance[:,k].reshape(15,1),data_components[i], "performance"+ str(k), "loadings of " + name + " for PC" + str(i+1), "perf" + str(k) + name +"PC"+str(i+1))
+             correl = np.around(correl, decimals=3)
+             correlationCoeff.append(correl*100)
+            
+        for j in range(i+1, nbPerf):
+            plot2dRegression(data_components[i].reshape(15,1), data_components[j], "PC" + str(i+1) + " for " + name, "PC"+ str(j+1), "RegressionLoadingsPC"+ str(i+1) +"-" + str(j+1))
     return correlationCoeff
 
 #Function for representing the inf and sup arrays on the projected PCs
@@ -49,7 +51,7 @@ def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time, n
         plt.xlabel('time')
         plt.ylabel('Variable ' + name + " PC" + str(i+1))
         plt.legend()
-        plt.savefig("plot/best&worst/"+"Var" + nbVar +"PC"+ str(i+1), bbox_inches='tight')
+        plt.savefig("plot/PcaBestworst/"+"Var" + nbVar +"PC"+ str(i+1), bbox_inches='tight')
         plt.show()    
 
 #Function for representing the inf and sup arrays on the projected PCs

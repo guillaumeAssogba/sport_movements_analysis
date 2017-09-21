@@ -72,11 +72,6 @@ def constructStdDeviationComponents(data, data_components):
             intermediateNegVar =  np.vstack((data_components[0]- stdComponents, data_components[1::]))
             stdProjectionPos = PCA_projection(data, intermediatePosVar)
             stdProjectionNeg = PCA_projection(data, intermediateNegVar)
-        elif i == 1:
-            intermediatePosVar =  np.vstack((data_components[0], data_components[i]+ stdComponents, data_components[i+1::]))
-            intermediateNegVar =  np.vstack((data_components[0], data_components[i]- stdComponents, data_components[i+1::]))
-            stdProjectionPos = np.hstack((stdProjectionPos, PCA_projection(data, intermediatePosVar)))
-            stdProjectionNeg = np.hstack((stdProjectionNeg, PCA_projection(data, intermediateNegVar)))
         elif i == len(data_components)-1:
             intermediatePosVar =  np.vstack((data_components[:i], data_components[i]+ stdComponents))
             intermediateNegVar =  np.vstack((data_components[:i], data_components[i]- stdComponents))
@@ -87,6 +82,7 @@ def constructStdDeviationComponents(data, data_components):
             intermediateNegVar =  np.vstack((data_components[:i], data_components[i]- stdComponents, data_components[i+1::]))
             stdProjectionPos = np.hstack((stdProjectionPos, PCA_projection(data, intermediatePosVar)))
             stdProjectionNeg = np.hstack((stdProjectionNeg, PCA_projection(data, intermediateNegVar)))
+
     return np.array(stdProjectionPos), np.array(stdProjectionNeg)
         
 def applyPCA(data, stdDeviation, varName, nb):
@@ -99,16 +95,16 @@ def applyPCA(data, stdDeviation, varName, nb):
         #explainedVariance(data_explained_variance_ratio_, varName[i])
     
         #represent the factor loadings for each PCs
-        for j in range(nb):
-            factorLoadings(intermediateComponentsPCA, j, varName[i])
+        #for j in range(nb):
+         #   factorLoadings(intermediateComponentsPCA, j, varName[i])
     
         #Project the data into the new PCs axis
         intermediateProjected = PCA_projection(data[i], intermediateComponentsPCA[:nb])
         
-        
         if i == 0:
             dataProjected = intermediateProjected
             componentsPCA = intermediateComponentsPCA[:nb]
+            pcaVariance = np.around(data_explained_variance_ratio_[:nb], decimals=3)*100
             if stdDeviation:
                 intermediateStdProjectionsPos, intermediateStdProjectionsNeg = constructStdDeviationComponents(data[i], intermediateComponentsPCA[:nb])
                 stdProjectionsPos = intermediateStdProjectionsPos
@@ -116,9 +112,12 @@ def applyPCA(data, stdDeviation, varName, nb):
         else:
             dataProjected = np.hstack((dataProjected, intermediateProjected))
             componentsPCA = np.concatenate((componentsPCA, intermediateComponentsPCA))
+            varianceEx = np.around(data_explained_variance_ratio_[:nb], decimals=3)*100
+            pcaVariance = np.concatenate((pcaVariance, varianceEx))
             if stdDeviation:
                 intermediateStdProjectionsPos, intermediateStdProjectionsNeg = constructStdDeviationComponents(data[i], intermediateComponentsPCA[:nb])
                 stdProjectionsPos = np.hstack((stdProjectionsPos, intermediateStdProjectionsPos))
                 stdProjectionsNeg = np.hstack((stdProjectionsNeg, intermediateStdProjectionsNeg))
-    return dataProjected, componentsPCA[:nb*len(data)], stdProjectionsPos, stdProjectionsNeg
+
+    return dataProjected, componentsPCA[:nb*len(data)], stdProjectionsPos, stdProjectionsNeg, pcaVariance
 
