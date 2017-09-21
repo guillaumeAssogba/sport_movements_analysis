@@ -1,10 +1,10 @@
 import sys
 import os
 from PyQt4 import QtGui
-import interface
+import sportInterface
 import launchAlgo
 
-class ExampleApp(QtGui.QMainWindow, interface.Ui_MainWindow):
+class ExampleApp(QtGui.QMainWindow, sportInterface.Ui_MainWindow):
     def __init__(self, parent=None):
         super(ExampleApp, self).__init__(parent)
         self.setupUi(self)
@@ -27,6 +27,10 @@ class ExampleApp(QtGui.QMainWindow, interface.Ui_MainWindow):
         self.checkBox_8.clicked.connect(self.algoBestWorstProjection)
         self.checkBox_5.clicked.connect(self.algoStdDeviation)
         
+        #save report
+        self.report = False
+        self.checkBox_13.clicked.connect(self.saveReport)
+        
         #launch data processing
         self.pushButton_3.clicked.connect(self.launchAnalysis)
         
@@ -47,33 +51,32 @@ class ExampleApp(QtGui.QMainWindow, interface.Ui_MainWindow):
         self.groupMethod = False
         
     def algoLoadings(self):
-        self.algorithm[0] = not self.algorithm[0]
+        self.algorithm[1] = not self.algorithm[1]
         
     def algoRepresentation(self):
-        self.algorithm[1] = not self.algorithm[1]
+        self.algorithm[0] = not self.algorithm[0]
         
     def algoBestWorstProjection(self):
         self.algorithm[2] = not self.algorithm[2]
         
     def algoStdDeviation(self):
         self.algorithm[3] = not self.algorithm[3]
+        
+    def saveReport(self):
+        self.report = not self.report
     
     def launchProcess(self):
         if self.bodyName and self.perfName:
             self.pushButton_3.setEnabled(True)
             
     def launchAnalysis(self):
-        launchAlgo.launchProcess2(self.bodyName, self.perfName, self.groupMethod, self.algorithm, int(self.spinBox.value()))
-            
-    
-          
+        launchAlgo.launchProcess2(self.bodyName, self.perfName, self.groupMethod, self.algorithm, int(self.spinBox.value()), int(self.spinBox_2.value()), int(self.spinBox_3.value()), self.report )
+       
 def main():
     app = QtGui.QApplication(sys.argv)
     form = ExampleApp()
     form.show()
     app.exec_()
-
-
         
 if __name__ == '__main__':
     main()
