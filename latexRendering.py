@@ -1,20 +1,6 @@
 from pylatex import Document, Section, Subsection, Figure, Table, Tabular, LineBreak, Package
-from pylatex.utils import italic
 import os
 
-def fill_document(doc):
-    """Add a section, a subsection and some text to the document.
-
-    :param doc: the document
-    :type doc: :class:`pylatex.document.Document` instance
-    """
-    with doc.create(Section('A section')):
-        doc.append('Some regular text and some ')
-        doc.append(italic('italic text. '))
-
-        with doc.create(Subsection('A subsection')):
-            doc.append('Also some crazy characters: $&#{}')
-            
 def fillLoadingsregression(doc, loadings, correl, nb, nbPca, nbPerf, name):
     with doc.create(Subsection('Regressions using PCA\'s loadings and performance ')):
         for i in range(nb):
@@ -27,7 +13,6 @@ def fillLoadingsregression(doc, loadings, correl, nb, nbPca, nbPerf, name):
                     correlStr = correlStr + str(correl[i][j]) + ', '
                 loadings_pic.add_caption('regressions between performance values and the body variable' + name[i] +'\'s loadings. (R squared is respectively equals to [' + correlStr + '])')
 
-        
 def varianceExplainedTable(doc, pcs, name, nbPca, nb ):
     doc.append('By applying the PCA to the sportsmen\'s dataset, the first three PCs were computed and explain more than 95% of the variance for each body part.')
     doc.append('The percentage of variance explained by the PCs are shown in Table 1.')
@@ -36,7 +21,6 @@ def varianceExplainedTable(doc, pcs, name, nbPca, nb ):
             tabular.add_hline()
             tabular.add_row(('Variable', 'PC number', 'Variance explained'))
             for i in range(nb):
-                print(pcs.shape)
                 tabular.add_hline()
                 tabular.add_row((name[i],'',''))
                 tabular.add_hline()
@@ -67,19 +51,18 @@ def fillstdDeviation(doc, data, nb, nbPca):
     with doc.create(Subsection('projections with the standard deviation of PCs\' loadings')):
         doc.append('Finally, the data was then projected to the space of the first three variables. The loadings\' weigth for each PC was then highlighted by observing the impact of their standard deviation on the projections.')
         with doc.create(Figure(position='H')) as stdDev_pic:
-            print(data)
             for i in range(nb*nbPca):
                 if(i%3 ==0 and i>0):
                     stdDev_pic.append(LineBreak())
                 stdDev_pic.add_image(data[i], width='150px')
             stdDev_pic.add_caption('Projections of the body variables on the PCS axis  for highlighting the impact of the standard deviations of the PCs\' loadings.')
-        
+
 def fillPCArepresentation(doc, pca, pcs, name, nbPca, nb, algorithm):
     with doc.create(Subsection('PCA application ')):
         varianceExplainedTable(doc, pcs, name, nbPca, nb)
         if algorithm:
             PCAfigures(doc, pca, nb)
-        
+
 def fillPca(doc, pca, loadings, pcs, bestAndWorst, stdDev, name, correl, nbPerf, nbPca, nb, algorithm):
     with doc.create(Section('Statistical Analysis')):
         doc.append('This part describe the different results obtaining by applying the PrinciPal Components analysis to the body movement dataset. ')        

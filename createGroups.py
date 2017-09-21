@@ -18,31 +18,28 @@ def transformPerfArray(perf_data, performance):
 #As it is a 1D-array, we reshape it to [-1,1] for using the k-means algorithm which need a multi-dimensional array
 def createGroupsByKmeans(performance, nbKmeans):
     kmeans = KMeans(n_clusters=2)
-    print(performance.shape)
     if(nbKmeans == 1):
         perf_fit = kmeans.fit_predict(performance[:, 0].reshape(-1,1))
     else:
         perf_fit = kmeans.fit_predict(performance[:, :nbKmeans])
     perf_data = transformPerfArray(perf_fit, performance)
     perf_data = perf_data.reshape(1,15)
-    print(perf_data)
     return perf_data
 
-#Create a per_data array with a 1 for the column of the 33% best kickers,
-#a 0 for the 33% worst kickers and -1 otherwise
-#This function could be improve and seems too complicated but produce the correct perf_data array
-def createGroupsRandomly(performance):
-    sorted_performance = performance[0].argsort()
-    perf_data = np.zeros((1, len(performance[0])))
-    for i in range(int(len(performance[0])/3)):
-        perf_data[0,sorted_performance[-5:][::-1][i]] = 1
-    for i in range(len(performance[0])):
-        if(perf_data[0,i] == 0):
-            perf_data[0,i] = -1
-    for i in range(int(len(performance[0])/3)):
-        perf_data[0,sorted_performance[0:5][i]] = 0
+#Create a perf_data array with a 1 for the column of the 50% best kickers,
+#a 0 for the 50% worst kickers
+def createHalfGroups(performance):
+    sorted_performance = performance[:, 0].argsort()
+    perf_data = np.zeros((1, len(performance)))
+    half = int(len(performance)/2)
+    for i in range(half):
+        perf_data[0][sorted_performance[-half:][::-1][i]] = 1
+    if len(performance)%2 != 0:
+        if (perf_data[0][sorted_performance[half+1]]- perf_data[0][sorted_performance[half]]) < (perf_data[0][sorted_performance[half]]-perf_data[0][sorted_performance[half-1]]):
+            perf_data[0][sorted_performance[half]] = 1
     return perf_data
 
+#regroup all the same variables computed for the different body variables into the same data.
 def constructCompts(components_, data, perf_data, nbPca):
     nbData = len(data)
     for i in range(nbData):
@@ -62,20 +59,18 @@ def constructCompts(components_, data, perf_data, nbPca):
 
 #Construction of the superior and inferior arrays and the corresponding components_array
 def constructComponents(components_, data, perf_data):
-    
     components_pos = components_
     data_superior = data
     delete_pos = 0
     components_neg = components_
     data_inferior = data
     delete_neg = 0
-    
     for i in range(len(data[0])):
-        if(perf_data[0, i] != 1):
+        if(perf_data[0][i] != 1):
             components_pos = np.delete(components_pos, i-delete_pos, 1)
             data_superior = np.delete(data_superior, i-delete_pos, 1)
             delete_pos += 1
-        elif (perf_data[0, i] != 0):
+        elif (perf_data[0][i] != 0):
             components_neg = np.delete(components_neg, i-delete_neg, 1)
             data_inferior = np.delete(data_inferior, i-delete_neg, 1)
             delete_neg += 1

@@ -27,15 +27,15 @@ def FastRugbyBuild(name1, name2):
 #Create adapted variables for future processing and their mean.
 def constructVariables(bodyMatrices, performance, nbPerf):
     #The time is the same for every data and correspond to the first column
-    time = bodyMatrices[1][:,0]
+    time = bodyMatrices[0][:,0]
     #Variables sheet 1
     varMatrices = []
     meanMatrices = []
-    
+
     for i in range(len(bodyMatrices)):
         varMatrices.append(bodyMatrices[i][:, 1:len(bodyMatrices[i].T)])
         meanMatrices.append(np.mean(varMatrices[i], axis=1))
-    
+
     #performances
     performance = performance[:,:nbPerf]
 
