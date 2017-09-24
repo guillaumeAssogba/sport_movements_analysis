@@ -92,11 +92,11 @@ def applyPCA(data, stdDeviation, varName, nb):
     for i in range(len(data)):
         intermediateComponentsPCA, data_explained_variance_ratio_ = PCA_values(data[i])
         #represent the percentage of variance explained
-        #explainedVariance(data_explained_variance_ratio_, varName[i])
+        explainedVariance(data_explained_variance_ratio_, varName[i])
     
         #represent the factor loadings for each PCs
-        #for j in range(nb):
-         #   factorLoadings(intermediateComponentsPCA, j, varName[i])
+        for j in range(nb):
+            factorLoadings(intermediateComponentsPCA, j, varName[i])
     
         #Project the data into the new PCs axis
         intermediateProjected = PCA_projection(data[i], intermediateComponentsPCA[:nb])

@@ -29,18 +29,26 @@ def plot2dRegression(x,y, nameX, nameY, namePlot):
     plt.show()
     return test.rvalue**2
 
-def use2dRegressionPlot( performance, data_components, name, nbPerf):
+#plot the 2D regression between the performance values and the loadings.
+#return the correlation factor: R squared
+def use2dRegressionPlot( performance, data_components, name, nbPca):
     correlationCoeff = []
-    
-    for i in range(nbPerf):
+
+    for i in range(nbPca):
         for k in range(performance.shape[1]):
              correl = plot2dRegression(performance[:,k].reshape(15,1),data_components[i], "performance"+ str(k), "loadings of " + name + " for PC" + str(i+1), "perf" + str(k) + name +"PC"+str(i+1))
              correl = np.around(correl, decimals=3)
              correlationCoeff.append(correl*100)
-            
-        for j in range(i+1, nbPerf):
-            plot2dRegression(data_components[i].reshape(15,1), data_components[j], "PC" + str(i+1) + " for " + name, "PC"+ str(j+1), "RegressionLoadingsPC"+ str(i+1) +"-" + str(j+1))
+
     return correlationCoeff
+
+#plot the 2D regression between the variables' loadings.
+def regressionBetweenVariables(data_components, nbPca, nb):
+    for i in range(nb-1):
+        for k in range(nb):
+            for j in range(i+1, nb):
+                for l in range(nb):
+                    plot2dRegression(data_components[3*i+k].reshape(15,1), data_components[3*j+l], "PC" + str(k+1) + " var " + str(i+1), "PC" + str(l+1) + " var " + str(j+1), "RegressionLoadingsvar"+ str(i+1) + "PC"+ str(k+1) + "var" + str(j+1)+ "PC"+ str(l+1))
 
 #Function for representing the inf and sup arrays on the projected PCs
 def infAndSupPCARepresentation(data, data_superior, data_inferior, name, time, nbVar, nb):

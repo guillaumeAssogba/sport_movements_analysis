@@ -37,12 +37,14 @@ def launchProcess2(name1, name2, groupMethod, algorithm, nbPca, nbKmeans, nbPerf
     #Apply the PCA for all the variables
     data_projected, data_components, stdProjectionsPos, stdProjectionsNeg, pcaVariance = pca.applyPCA(varMatrices, algorithm[3], varName, nbPca)
     
+    pltVar.regressionBetweenVariables(data_components, nbPca, len(varMatrices))
     #Create the std deviation variables
     if algorithm[2]:
         components_superior, components_inferior, var_superior, var_inferior, nbSup, nbInf = groups.constructCompts(data_components, varMatrices, perf_data, nbPca)
 
     for k in range(len(varMatrices)):
 
+        
         #Represent the PC scores for each PCs
         if algorithm[0]:
             pltVar.PCArepresentation(data_projected[:,nbPca*k:nbPca*(k+1)], str(k+1), time, "PCsVar"+ str(k+1), nbPca)
