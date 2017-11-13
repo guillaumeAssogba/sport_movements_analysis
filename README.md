@@ -32,7 +32,7 @@ Depending on the algorithms chosen, the programs would plot the figures of the d
 
 ### NEXT STEP
 
-The next steps are to provide the possibility to easily add any algorithm by linking some commented codes to the existing user interface, to allow the use of different type of files for the dataset. Some classifications algorithms would be added (SVM and neural networks) which would use the PC's loadings. The construction of the report would be improved by allow the user to indicate the sport and a description of the dataset (numbers of samples, observations, and participants). An example of dataset should be uploaded for helping the user to perform the analysis.
+The next steps are to provide the possibility to easily add any algorithm by linking some commented codes to the existing user interface, to allow the use of different type of files for the dataset. Some classifications algorithms would be added (SVM and neural networks) which would use the PC's loadings. The construction of the report would be improved by allowing the user to indicate the sport and a description of the dataset (numbers of samples, observations, and participants). An example of dataset should be uploaded for helping the user to perform the analysis.
 
 Feel free to contribute to this project, write any comments or share it with your communautee.
 
