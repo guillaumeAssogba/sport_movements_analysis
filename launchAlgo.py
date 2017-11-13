@@ -5,8 +5,6 @@ import pca
 import representation as pltVar
 import latexRendering as ltx
 
-#COMMENTAIRE TEEEEEEST SISI
-
 def launchProcess2(name1, name2, groupMethod, algorithm, nbPca, nbKmeans, nbPerf, report):
     """ launch the different algorithms to perform
 
